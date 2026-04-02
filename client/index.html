@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ethan Laundry POS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body>
+  <div class="auth-overlay" id="authOverlay">
+    <section class="auth-card">
+      <div class="auth-copy">
+        <p class="eyebrow dark">Ethan Laundry POS</p>
+        <h2>Welcome back</h2>
+        <p class="muted">Sign in to manage customers, orders, services, and daily laundry operations.</p>
+        <div class="auth-hint">
+          <strong>Default admin</strong>
+          <span>Username: `admin`</span>
+          <span>Password: `admin123`</span>
+        </div>
+      </div>
+      <form id="loginForm" class="form-grid auth-form">
+        <label>Username<input type="text" id="loginUsername" placeholder="admin" required></label>
+        <label>Password<input type="password" id="loginPassword" placeholder="Enter password" required></label>
+        <button type="submit" class="primary-btn">Sign In</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">EL</div>
+        <div>
+          <p class="eyebrow">Laundry POS</p>
+          <h1>Ethan Laundry</h1>
+        </div>
+      </div>
+      <nav class="nav">
+        <button class="nav-link active" data-screen="dashboard">Dashboard</button>
+        <button class="nav-link" data-screen="customers">Customers</button>
+        <button class="nav-link" data-screen="services">Services</button>
+        <button class="nav-link" data-screen="orders">Orders</button>
+        <button class="nav-link" data-screen="reports">Reports</button>
+      </nav>
+      <div class="sidebar-card">
+        <p class="eyebrow">Today</p>
+        <h2 id="todayDate"></h2>
+        <p class="muted">Professional POS for customer, billing, and laundry workflow tracking.</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Operations Center</p>
+          <h2 id="screenTitle">Dashboard</h2>
+        </div>
+        <div class="topbar-actions">
+          <div class="search-wrap">
+            <input id="globalSearch" type="search" placeholder="Search customer or invoice">
+          </div>
+          <span class="app-status" id="appStatus">Connecting...</span>
+          <button class="primary-btn" id="userMenuBtn">Admin</button>
+          <button class="secondary-btn" id="logoutBtn">Logout</button>
+        </div>
+      </header>
+
+      <div class="flash-message" id="flashMessage"></div>
+
+      <section class="screen active" id="dashboard">
+        <div class="hero-card">
+          <div>
+            <p class="eyebrow">Live Snapshot</p>
+            <h3>Track orders, payments, and customer activity from one place.</h3>
+            <p class="muted">This layout is ready for your JavaScript backend and MySQL data once connected.</p>
+          </div>
+          <div class="hero-stats">
+            <div class="mini-stat"><span>Active Orders</span><strong id="activeOrders">0</strong></div>
+            <div class="mini-stat"><span>Today Revenue</span><strong id="todayRevenue">KSh 0</strong></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card"><span>Total Customers</span><strong id="totalCustomers">0</strong></article>
+          <article class="stat-card"><span>Orders Today</span><strong id="ordersToday">0</strong></article>
+          <article class="stat-card"><span>Pending Collection</span><strong id="pendingCollection">0</strong></article>
+          <article class="stat-card"><span>Services Offered</span><strong id="serviceCount">0</strong></article>
+        </div>
+
+        <div class="panel-grid">
+          <section class="panel">
+            <div class="panel-head"><h3>Recent Orders</h3></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Invoice</th><th>Customer</th><th>Status</th><th>Total</th></tr></thead>
+                <tbody id="recentOrdersTable"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><h3>Service Mix</h3></div>
+            <div id="serviceMix" class="service-mix"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="customers">
+        <div class="panel-grid customers-layout">
+          <section class="panel">
+            <div class="panel-head"><h3>Add Customer</h3></div>
+            <form id="customerForm" class="form-grid">
+              <label>Full Name<input type="text" id="customerName" placeholder="Customer full name" required></label>
+              <label>Phone Number<input type="tel" id="customerPhone" placeholder="0700 000 000" required></label>
+              <button type="submit" class="primary-btn">Save Customer</button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><h3>Customer Directory</h3></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Name</th><th>Phone</th><th>Orders</th><th>Actions</th></tr></thead>
+                <tbody id="customerTable"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="services">
+        <div class="panel-grid customers-layout">
+          <section class="panel">
+            <div class="panel-head"><h3>Add Service</h3></div>
+            <form id="serviceForm" class="form-grid">
+              <label>Service Name<input type="text" id="serviceName" placeholder="Wash & Fold" required></label>
+              <label>Price (KSh)<input type="number" id="servicePrice" min="0" step="0.01" placeholder="300" required></label>
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">Save Service</button>
+                <button type="button" class="secondary-btn" id="clearServiceBtn">Clear Service Form</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><h3>Available Services</h3></div>
+            <div id="serviceCards" class="service-card-grid"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="orders">
+        <div class="panel-grid order-layout">
+          <section class="panel">
+            <div class="panel-head"><h3>Create Order</h3></div>
+            <form id="orderForm" class="form-grid">
+              <label>Customer<select id="orderCustomer" required></select></label>
+              <label>Service<select id="orderService" required></select></label>
+              <label>Quantity<input type="number" id="orderQuantity" min="1" value="1" required></label>
+              <label>Payment Method
+                <select id="paymentMethod" required>
+                  <option value="Cash">Cash</option>
+                  <option value="Mobile">Mobile</option>
+                </select>
+              </label>
+              <label id="mobilePhoneWrap">M-Pesa Phone Number<input type="tel" id="mpesaPhone" placeholder="2547XXXXXXXX"></label>
+              <label>Status
+                <select id="orderStatus" required>
+                  <option value="Pending">Pending</option>
+                  <option value="Processing">Processing</option>
+                  <option value="Ready">Ready</option>
+                  <option value="Collected">Collected</option>
+                </select>
+              </label>
+              <div class="order-total-card"><span>Calculated Total</span><strong id="calculatedTotal">KSh 0</strong></div>
+              <button type="submit" class="primary-btn">Create Invoice</button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><h3>Receipt Preview</h3></div>
+            <div id="receiptPreview" class="receipt-card">
+              <p class="muted">Create an order to preview the generated invoice and receipt details here.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="reports">
+        <div class="stats-grid">
+          <article class="stat-card"><span>Monthly Revenue</span><strong id="monthlyRevenue">KSh 0</strong></article>
+          <article class="stat-card"><span>Cash Payments</span><strong id="cashPayments">0</strong></article>
+          <article class="stat-card"><span>Mobile Payments</span><strong id="mobilePayments">0</strong></article>
+          <article class="stat-card"><span>Ready Orders</span><strong id="readyOrders">0</strong></article>
+        </div>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Transaction Report</h3>
+            <button class="secondary-btn" id="printReportBtn">Print Report</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Invoice</th><th>Customer</th><th>Service</th><th>Method</th><th>Status</th><th>Total</th></tr></thead>
+              <tbody id="reportTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="./assets/js/app.js"></script>
+</body>
+</html>
